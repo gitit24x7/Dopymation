@@ -54,7 +54,7 @@ export function Manifesto() {
           </p>
         </motion.div>
 
-        <div className="mt-16 grid grid-cols-2 border-t border-paper/10 md:grid-cols-4">
+        <div className="mt-16 grid grid-cols-1 divide-y divide-paper/10 border-t border-paper/10 md:grid-cols-4 md:divide-y-0">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -62,7 +62,7 @@ export function Manifesto() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.4 }}
               transition={{ duration: 0.5, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="border-b border-r border-paper/10 py-8 pr-6 md:border-b-0"
+              className="py-6 md:border-r md:border-paper/10 md:py-8 md:pr-6 md:last:border-r-0"
             >
               <p className="font-mono text-4xl font-medium text-flame md:text-5xl">
                 <CountUp value={stat.value} suffix={stat.suffix} />

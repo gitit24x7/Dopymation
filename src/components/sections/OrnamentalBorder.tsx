@@ -13,16 +13,24 @@ const BANDS = [
   { r: 6, fill: "#f2a93b" },
 ];
 
-const PERIOD = 90;
-const THICKNESS = 56;
+const BASE_PERIOD = 90;
+const BASE_THICKNESS = 56;
 
 type OrnamentalBorderProps = {
   orientation: "left" | "bottom";
+  /** Scales the whole motif (radii, period, thickness) uniformly. The SVG
+   * has no viewBox on purpose, so the pattern repeats at a fixed real-world
+   * size rather than stretching; shrinking it for mobile means scaling the
+   * underlying numbers, not just the container's CSS size. */
+  scale?: number;
 };
 
-export function OrnamentalBorder({ orientation }: OrnamentalBorderProps) {
-  const patternId = `border-fan-${orientation}`;
+export function OrnamentalBorder({ orientation, scale = 1 }: OrnamentalBorderProps) {
+  const patternId = `border-fan-${orientation}-${scale}`;
   const vertical = orientation === "left";
+  const PERIOD = BASE_PERIOD * scale;
+  const THICKNESS = BASE_THICKNESS * scale;
+  const bands = BANDS.map((band) => ({ ...band, r: band.r * scale }));
 
   const patternWidth = vertical ? THICKNESS : PERIOD;
   const patternHeight = vertical ? PERIOD : THICKNESS;
@@ -62,17 +70,17 @@ export function OrnamentalBorder({ orientation }: OrnamentalBorderProps) {
           width={patternWidth}
           height={patternHeight}
         >
-          {BANDS.map((band) => (
+          {bands.map((band, i) => (
             <path
-              key={band.r}
+              key={i}
               d={halfDiscPath(band.r)}
               fill={band.fill}
               stroke={INK}
-              strokeWidth={1.5}
+              strokeWidth={1.5 * scale}
             />
           ))}
           {dotOffsets.map((d, i) => (
-            <circle key={i} cx={d.x} cy={d.y} r={2.4} fill="#f3dfa8" stroke={INK} strokeWidth={0.75} />
+            <circle key={i} cx={d.x} cy={d.y} r={2.4 * scale} fill="#f3dfa8" stroke={INK} strokeWidth={0.75 * scale} />
           ))}
         </pattern>
       </defs>

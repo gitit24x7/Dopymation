@@ -52,7 +52,7 @@ export function EraPanel({ era }: EraPanelProps) {
   return (
     <div
       ref={panelRef}
-      className="era-panel relative flex h-[72vh] w-[88vw] shrink-0 snap-center flex-col justify-center overflow-hidden px-8 py-14 md:h-[100dvh] md:w-screen md:snap-align-none md:px-16 lg:px-28"
+      className="era-panel relative flex h-[72vh] w-[90vw] shrink-0 snap-center flex-col justify-center overflow-hidden px-6 py-14 md:h-[100dvh] md:w-screen md:snap-align-none md:px-16 lg:px-28"
       style={{ backgroundColor: era.background, color: era.foreground }}
     >
       <span className="absolute left-8 top-24 font-mono text-xs uppercase tracking-[0.2em] opacity-60 md:left-16 md:top-28 lg:left-28">
@@ -100,13 +100,19 @@ export function EraPanel({ era }: EraPanelProps) {
               background: `repeating-conic-gradient(from -20deg at 0% 45%, ${era.accent}33 0deg 0.5deg, transparent 0.5deg 8deg)`,
             }}
           />
-          <div className="pointer-events-none absolute right-[4%] top-1/2 h-64 w-64 -translate-y-1/2 md:right-[8%] md:h-[420px] md:w-[420px]">
+          <div className="pointer-events-none absolute right-[6%] top-[10%] h-32 w-32 md:right-[8%] md:top-1/2 md:h-[420px] md:w-[420px] md:-translate-y-1/2">
             <IndianMandala reduceMotion={!!reduceMotion} />
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-14">
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 md:hidden">
+            <OrnamentalBorder orientation="left" scale={0.55} />
+          </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 md:hidden">
+            <OrnamentalBorder orientation="bottom" scale={0.55} />
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-14 md:block">
             <OrnamentalBorder orientation="left" />
           </div>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14">
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-14 md:block">
             <OrnamentalBorder orientation="bottom" />
           </div>
         </>
@@ -147,10 +153,7 @@ export function EraPanel({ era }: EraPanelProps) {
           </div>
         </div>
       ) : era.id === "brutalism" ? (
-        <div
-          className="relative w-fit max-w-xl border-4 border-black bg-[#e9e4d8] px-8 py-10 text-[#0c0c0c] md:px-12 md:py-12"
-          style={{ boxShadow: "14px 14px 0 #000" }}
-        >
+        <div className="relative w-fit max-w-xl border-4 border-black bg-[#e9e4d8] px-5 py-7 text-[#0c0c0c] shadow-[8px_8px_0_#000] md:px-12 md:py-12 md:shadow-[14px_14px_0_#000]">
           <h3 className="font-display text-4xl font-bold leading-[1.05] tracking-tight md:text-6xl">
             {era.headline}
           </h3>
