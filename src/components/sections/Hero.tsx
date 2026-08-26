@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Button } from "../ui/Button";
 
 function MotionWordmark() {
@@ -17,22 +19,42 @@ function MotionWordmark() {
 }
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+
+  // A subtle parallax: the background drifts a little slower than the page
+  // scrolls, so it reads as sitting behind the text rather than pasted flat
+  // on top of it. Same effect on every breakpoint, off entirely for
+  // prefers-reduced-motion.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, 70]);
+
   return (
-    <section id="hero" className="hero-navy-bg relative overflow-hidden md:min-h-[100dvh]">
-      {/* Desktop and up: full-bleed crop favouring the emblem on the right,
-          with a scrim so the text half stays legible. Mobile skips the crop
-          entirely (see below) so the artwork is never sliced down to a sliver. */}
-      <img
-        src="/complete-bg.webp"
-        alt="Dopymation, motion and digital invitations creative studio"
-        className="absolute inset-0 hidden h-full w-full object-cover object-[68%_center] md:block"
-        fetchPriority="high"
-      />
-      <div className="absolute inset-0 hidden bg-gradient-to-r from-ink/65 via-ink/15 to-transparent md:block" />
+    <section
+      ref={sectionRef}
+      id="hero"
+      className="hero-navy-bg relative min-h-[100dvh] overflow-hidden"
+    >
+      {/* One full-bleed background on every breakpoint. object-position shifts
+          the crop toward the calmer navy side on narrow screens so text stays
+          legible, and toward the emblem once there's room beside it. */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.img
+          src="/complete-bg.webp"
+          alt="Dopymation, motion and digital invitations creative studio"
+          className="absolute -top-[8%] left-0 h-[116%] w-full object-cover object-[30%_center] sm:object-[45%_center] md:object-[68%_center]"
+          style={{ y: reduceMotion ? 0 : parallaxY }}
+          fetchPriority="high"
+        />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/80 via-ink/45 to-transparent md:from-ink/65 md:via-ink/15 md:to-transparent" />
       <MotionWordmark />
       <div className="section-texture" />
 
-      <div className="relative z-10 flex w-full flex-col justify-center px-6 pt-24 pb-10 md:min-h-[100dvh] md:w-1/2 md:px-12 md:py-24 lg:px-16">
+      <div className="relative z-10 flex min-h-[100dvh] w-full flex-col justify-center px-6 py-24 md:w-1/2 md:px-12 lg:px-16">
         <div className="inline-flex w-fit items-center border border-paper/25 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper/80">
           Motion &amp; Digital Invitations
         </div>
@@ -54,16 +76,6 @@ export function Hero() {
             View The Eras
           </Button>
         </div>
-      </div>
-
-      {/* Mobile only: the complete, uncropped artwork gets its own full-width
-          moment instead of being hidden behind a text-legibility crop. */}
-      <div className="relative z-10 px-6 pb-14 md:hidden">
-        <img
-          src="/complete-bg.webp"
-          alt="Dopymation, motion and digital invitations creative studio"
-          className="h-auto w-full"
-        />
       </div>
     </section>
   );
